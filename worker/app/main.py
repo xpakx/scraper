@@ -15,3 +15,6 @@ def do_process(page: bytes = Return('do_check')) -> None:
     print("Processing")
     title = downloader.extract(page)
     print(title)
+
+if __name__ == "__main__":
+    scheduler.run()
