@@ -6,4 +6,5 @@ def get_page(url: str) -> bytes:
 
 def extract(page: bytes) -> str:
     soup = BeautifulSoup(page, "html.parser")
-    return soup.title.text
+    return str(soup.title.text)
+
