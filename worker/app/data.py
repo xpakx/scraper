@@ -5,4 +5,3 @@ class PageData:
     url: str
     content: str
     date: str
-

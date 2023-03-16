@@ -5,6 +5,7 @@ import downloader
 import repository
 import logging
 from publisher import Publisher
+from data import PageData
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -29,6 +30,9 @@ def do_process(page: bytes = Return('do_check')) -> None:
     title = downloader.extract(page)
     changeDetected: bool = repository.test_changes(url, title)
     print(title, '(change detected)' if changeDetected else '')
+    if(changeDetected):
+        data: PageData = PageData(url, title, 'a')
+        rabbit.publish(data)
 
 if __name__ == "__main__":
     logger.info("App started")
