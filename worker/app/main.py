@@ -6,32 +6,33 @@ import repository
 import logging
 from publisher import Publisher
 from data import PageData
+from resolver import PropertyResolver
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 scheduler = Rocketry()
-url = 'https://aeon.co/essays/on-nonconformism-or-why-we-need-to-be-seen-and-not-herded'
 
 rabbit = Publisher()
 rabbit.connect()
 rabbit.setup()
 
+properties = PropertyResolver()
 
 @scheduler.task(every("5 minutes"))
 def do_check() -> bytes:
     logger.info("Downloading…")
-    page: bytes = downloader.get_page(url)
+    page: bytes = downloader.get_page(properties.url)
     return page
 
 @scheduler.task(after_success(do_check))
 def do_process(page: bytes = Return('do_check')) -> None:
     logger.info("Processing…")
     title = downloader.extract(page)
-    changeDetected: bool = repository.test_changes(url, title)
+    changeDetected: bool = repository.test_changes(properties.url, title)
     print(title, '(change detected)' if changeDetected else '')
     if(changeDetected):
-        data: PageData = PageData(url, title, 'a')
+        data: PageData = PageData(properties.url, title, 'a')
         rabbit.publish(data)
 
 if __name__ == "__main__":
