@@ -4,8 +4,9 @@ services:
     build: ./worker/
     container_name: worker
     environment:
-      - WEBSITE=https://aeon.co/essays/on-nonconformism-or-why-we-need-to-be-seen-and-not-herded
-      - RABBIT=rabbitmq
+      - WEBSITE_URL=https://aeon.co/essays/on-nonconformism-or-why-we-need-to-be-seen-and-not-herded
+      - RABBIT_HOST=rabbitmq
+      - RABBIT_PORT=5672
     depends_on:
       - rabbitmq
   rabbitmq:

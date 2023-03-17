@@ -16,7 +16,7 @@ scheduler = Rocketry()
 properties = PropertyResolver()
 
 rabbit = Publisher()
-rabbit.connect(properties.rabbit)
+rabbit.connect(properties.rabbit, properties.rabbit_port)
 rabbit.setup()
 
 @scheduler.task(every("5 minutes"))
