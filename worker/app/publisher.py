@@ -5,8 +5,8 @@ class Publisher:
     connection = None
     channel = None
 
-    def connect(self):
-        params = pika.ConnectionParameters(host = 'localhost', port = 5672)
+    def connect(self, host: str):
+        params = pika.ConnectionParameters(host = host, port = 5672)
         self.connection = pika.BlockingConnection(parameters=params)
         self.channel = self.connection.channel()
     

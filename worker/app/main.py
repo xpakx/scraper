@@ -13,11 +13,11 @@ logger = logging.getLogger(__name__)
 
 scheduler = Rocketry()
 
-rabbit = Publisher()
-rabbit.connect()
-rabbit.setup()
-
 properties = PropertyResolver()
+
+rabbit = Publisher()
+rabbit.connect(properties.rabbit)
+rabbit.setup()
 
 @scheduler.task(every("5 minutes"))
 def do_check() -> bytes:

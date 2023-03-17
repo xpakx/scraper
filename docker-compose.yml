@@ -1,0 +1,19 @@
+version: '3.3'
+services:
+  worker:
+    build: ./worker/
+    container_name: worker
+    environment:
+      - WEBSITE=https://aeon.co/essays/on-nonconformism-or-why-we-need-to-be-seen-and-not-herded
+      - RABBIT=rabbitmq
+    depends_on:
+      - rabbitmq
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: 'rabbitmq'
+    ports:
+        - 5672:5672
+        - 15672:15672
+    volumes:
+        - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+
