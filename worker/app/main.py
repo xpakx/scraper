@@ -5,7 +5,7 @@ import downloader
 import repository
 import logging
 from publisher import Publisher
-from data import PageData
+from data import ActivityData
 from resolver import PropertyResolver
 
 logging.basicConfig(level=logging.INFO)
@@ -23,7 +23,6 @@ rabbit.setup()
 def do_check() -> bytes:
     logger.info("Downloading…")
     page: bytes = downloader.get_page(properties.url)
-    print(page)
     return page
 
 @scheduler.task(after_success(do_check))
@@ -32,10 +31,10 @@ def do_process(page: bytes = Return('do_check')) -> None:
     text = downloader.extract(page)
     logger.info(text)
     changeDetected: bool = repository.test_changes(properties.url, text)
-    print(text, '(change detected)' if changeDetected else '')
     if(changeDetected):
-        data: PageData = PageData(properties.url, text, 'a')
-        rabbit.publish(data)
+        logger.info("Change detected")
+        activities: list[ActivityData] = downloader.get_activities(properties.activities_url)
+        rabbit.publish_all(activities)
 
 if __name__ == "__main__":
     logger.info("App started")
