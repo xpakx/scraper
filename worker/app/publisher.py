@@ -1,5 +1,8 @@
 import pika
 from data import ActivityData
+import json
+from dataclasses import asdict
+
 
 class Publisher:
     connection = None
@@ -24,7 +27,7 @@ class Publisher:
             self.channel.basic_publish(
                 exchange='pages', 
                 routing_key='page.changes', 
-                body = str(payload)
+                body = json.dumps(asdict(payload))
             )
         
     def publish_all(self, activities: list[ActivityData]) -> None:
