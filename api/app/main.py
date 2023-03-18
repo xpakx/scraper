@@ -9,7 +9,7 @@ consumer.start()
 
 @app.get("/activities")
 async def activities():
-    return {"text": "Test"}
+    return repository.get_all_activities()
 
 @app.on_event("shutdown")
 async def shutdown_event():

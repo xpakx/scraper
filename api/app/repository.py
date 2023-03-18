@@ -23,7 +23,6 @@ Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
 
 def add_activity(data: ActivityData) -> None:
-    print(f"Received message: {data}")
     session = Session()
     session.add(Activity(
         activity_id=data.id, 
@@ -32,3 +31,7 @@ def add_activity(data: ActivityData) -> None:
         distance=data.distance
     ))
     session.commit()
+
+def get_all_activities(page: int = 0):
+    session = Session()
+    return session.query(Activity).all()
