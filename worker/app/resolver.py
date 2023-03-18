@@ -6,6 +6,7 @@ class PropertyResolver:
         config = configparser.ConfigParser()
         config.read('app/properties.ini')
         print(config.sections())
-        self.url = os.environ.get('WEBSITE_URL', config.get('DEFAULT', 'website_url'))
+        self.user_id = os.environ.get('USER_ID', config.get('DEFAULT', 'user_id'))
+        self.url = 'https://citystrides.com/users/' + self.user_id
         self.rabbit = os.environ.get('RABBIT_HOST', config.get('DEFAULT', 'rabbit_host'))
         self.rabbit_port = os.environ.get('RABBIT_PORT', config.get('DEFAULT', 'rabbit_port'))

@@ -23,16 +23,18 @@ rabbit.setup()
 def do_check() -> bytes:
     logger.info("Downloading…")
     page: bytes = downloader.get_page(properties.url)
+    print(page)
     return page
 
 @scheduler.task(after_success(do_check))
 def do_process(page: bytes = Return('do_check')) -> None:
     logger.info("Processing…")
-    title = downloader.extract(page)
-    changeDetected: bool = repository.test_changes(properties.url, title)
-    print(title, '(change detected)' if changeDetected else '')
+    text = downloader.extract(page)
+    logger.info(text)
+    changeDetected: bool = repository.test_changes(properties.url, text)
+    print(text, '(change detected)' if changeDetected else '')
     if(changeDetected):
-        data: PageData = PageData(properties.url, title, 'a')
+        data: PageData = PageData(properties.url, text, 'a')
         rabbit.publish(data)
 
 if __name__ == "__main__":

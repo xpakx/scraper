@@ -4,7 +4,7 @@ services:
     build: ./worker/
     container_name: worker
     environment:
-      - WEBSITE_URL=https://aeon.co/essays/on-nonconformism-or-why-we-need-to-be-seen-and-not-herded
+      - USER_ID=60433
       - RABBIT_HOST=rabbitmq
       - RABBIT_PORT=5672
     depends_on:

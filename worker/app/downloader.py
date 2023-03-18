@@ -6,5 +6,6 @@ def get_page(url: str) -> bytes:
 
 def extract(page: bytes) -> str:
     soup = BeautifulSoup(page, "html.parser")
-    return str(soup.title.text)
+    streets = soup.find("div", {"class": "text-gray-500"})
+    return str(streets)
 
