@@ -1,7 +1,7 @@
 from rocketry import Rocketry
 from rocketry.conds import every, after_success
 from rocketry.args import Return
-import downloader
+from downloader import CityStridesDownloader
 import repository
 import logging
 from publisher import Publisher
@@ -14,6 +14,7 @@ logger = logging.getLogger(__name__)
 scheduler = Rocketry()
 
 properties = PropertyResolver()
+downloader = CityStridesDownloader(properties)
 
 rabbit = Publisher()
 rabbit.connect(properties.rabbit, properties.rabbit_port)
@@ -22,18 +23,17 @@ rabbit.setup()
 @scheduler.task(every("5 minutes"))
 def do_check() -> bytes:
     logger.info("Downloading…")
-    page: bytes = downloader.get_page(properties.url)
+    page: bytes = downloader.get_profile()
     return page
 
 @scheduler.task(after_success(do_check))
 def do_process(page: bytes = Return('do_check')) -> None:
     logger.info("Processing…")
     text = downloader.extract(page)
-    logger.info(text)
     changeDetected: bool = repository.test_changes(properties.url, text)
     if(changeDetected):
         logger.info("Change detected")
-        activities: list[ActivityData] = downloader.get_activities(properties.activities_url)
+        activities: list[ActivityData] = downloader.get_activities()
         rabbit.publish_all(activities)
 
 if __name__ == "__main__":
