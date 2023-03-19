@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from data import ActivityData
+from data import Street
 from resolver import PropertyResolver
 
 class CityStridesDownloader:
@@ -26,8 +27,19 @@ class CityStridesDownloader:
         return map(self.to_activity, activities)
 
     def to_activity(self, html) -> ActivityData:
-        id = html['id']
-        date = html.find('h2').text
-        distance = html.find('div', {'class' : 'text-gray-500'}).text
-        completed = html.find('span').text
+        id = html['id'].strip().replace('activity_', '')
+        date = html.find('h2').text.strip()
+        distance = html.find('div', {'class' : 'text-gray-500'}).text.strip()
+        completed = html.find('span').text.strip()
+        streets = self.get_streets(id)
         return ActivityData(id, completed, date, distance)
+
+    def get_streets(self, activity_id: str) -> list[Street]:
+        soup = BeautifulSoup(self.get_page(self.streets_url.format(page=1, id=activity_id)), "html.parser")
+        streets = soup.select("[id^=street_]")
+        return map(self.to_street, streets)
+    
+    def to_street(self, html) -> Street:
+        street_name = html.find('div', {'class' : 'font-medium'}).text
+        city_name = html.find('div', {'class' : 'font-light'}).text
+        return Street(street_name, city_name)
