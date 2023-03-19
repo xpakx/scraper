@@ -3,6 +3,8 @@ from bs4 import BeautifulSoup
 from data import ActivityData
 from data import Street
 from resolver import PropertyResolver
+from typing import List
+
 
 class CityStridesDownloader:
     def __init__(self, properties: PropertyResolver):
@@ -21,7 +23,7 @@ class CityStridesDownloader:
         streets = soup.find("div", {"class": "text-gray-500"})
         return str(streets)
 
-    def get_activities(self) -> list[ActivityData]:
+    def get_activities(self) -> List[ActivityData]:
         soup = BeautifulSoup(self.get_page(self.activities_url.format(page=1)), "html.parser")
         activities = soup.find("div", {"id": "activities"}).find_all("a")
         return map(self.to_activity, activities)
@@ -34,7 +36,7 @@ class CityStridesDownloader:
         streets = self.get_streets(id)
         return ActivityData(id, completed, date, distance)
 
-    def get_streets(self, activity_id: str) -> list[Street]:
+    def get_streets(self, activity_id: str) -> List[Street]:
         soup = BeautifulSoup(self.get_page(self.streets_url.format(page=1, id=activity_id)), "html.parser")
         streets = soup.select("[id^=street_]")
         return map(self.to_street, streets)

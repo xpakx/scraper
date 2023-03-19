@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from consumer import Consumer
-import repository
+from app.consumer import Consumer
+from app import repository
+from app.resolver import PropertyResolver
 
 origins = [
     "http://localhost",
@@ -18,8 +19,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+properties = PropertyResolver()
+
 consumer = Consumer()
-consumer.connect('localhost', 5672)
+consumer.connect(properties.rabbit, properties.rabbit_port)
 consumer.start()
 
 @app.get("/activities")

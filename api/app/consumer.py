@@ -1,7 +1,7 @@
 import pika
 import threading
-from repository import add_activity
-from data import ActivityData
+from app.repository import add_activity
+from app.data import ActivityData
 import json
 
 class Consumer:

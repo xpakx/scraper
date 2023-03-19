@@ -9,6 +9,16 @@ services:
       - RABBIT_PORT=5672
     depends_on:
       - rabbitmq
+  api:
+    build: ./api/
+    container_name: api
+    ports:
+        - "8000:80"
+    environment:
+      - RABBIT_HOST=rabbitmq
+      - RABBIT_PORT=5672
+    depends_on:
+      - rabbitmq
   rabbitmq:
     image: rabbitmq:3-management-alpine
     container_name: 'rabbitmq'
@@ -17,4 +27,9 @@ services:
         - 15672:15672
     volumes:
         - ~/.docker-conf/rabbitmq/data/:/var/lib/rabbitmq/
+  frontend:
+    container_name: frontend
+    build: ./frontend/
+    ports:
+      - "80:80"
 

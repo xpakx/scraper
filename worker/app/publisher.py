@@ -2,7 +2,7 @@ import pika
 from data import ActivityData
 import json
 from dataclasses import asdict
-
+from typing import List
 
 class Publisher:
     connection = None
@@ -30,6 +30,6 @@ class Publisher:
                 body = json.dumps(asdict(payload))
             )
         
-    def publish_all(self, activities: list[ActivityData]) -> None:
+    def publish_all(self, activities: List[ActivityData]) -> None:
         for activity in activities:
             self.publish(activity)
