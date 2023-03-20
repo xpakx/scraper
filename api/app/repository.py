@@ -38,16 +38,22 @@ def add_activity(data: ActivityData) -> None:
         date=data.date,
         distance=data.distance
     ))
-    for street in data.streets:
-        session.add(Street(
-            name=street.name, 
-            city_name=street.city_name,
-            activity_id=data.id,
-            date=data.date
-        ))
-    
+    logger.info(data.streets)
+    if(data and len(data.streets) > 0):
+        for street in data.streets:
+            logger.info(street)
+            session.add(Street(
+                name=street['name'], 
+                city_name=street['city_name'],
+                activity_id=data.id,
+                date=data.date
+            ))
     session.commit()
 
 def get_all_activities(page: int = 0):
     session = Session()
     return session.query(Activity).all()
+
+def get_all_streets(page: int = 0):
+    session = Session()
+    return session.query(Street).all()

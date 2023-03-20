@@ -29,6 +29,10 @@ consumer.start()
 async def activities():
     return repository.get_all_activities()
 
+@app.get("/streets")
+async def streets():
+    return repository.get_all_streets()
+
 @app.on_event("shutdown")
 async def shutdown_event():
     consumer.stop()
