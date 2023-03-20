@@ -33,8 +33,8 @@ class CityStridesDownloader:
         date = html.find('h2').text.strip()
         distance = html.find('div', {'class' : 'text-gray-500'}).text.strip()
         completed = html.find('span').text.strip()
-        streets = self.get_streets(id)
-        return ActivityData(id, completed, date, distance)
+        streets = list(self.get_streets(id))
+        return ActivityData(id, completed, date, distance, streets)
 
     def get_streets(self, activity_id: str) -> List[Street]:
         soup = BeautifulSoup(self.get_page(self.streets_url.format(page=1, id=activity_id)), "html.parser")

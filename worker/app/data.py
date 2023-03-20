@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import List
 
 @dataclass
 class Street:
@@ -11,4 +12,4 @@ class ActivityData:
     completed_streets: int
     date: str
     distance: str
-    #streets: list[Street]
+    streets: List[Street]
