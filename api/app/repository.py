@@ -11,12 +11,20 @@ logger = logging.getLogger(__name__)
 Base = declarative_base()
 
 class Activity(Base):
-    __tablename__ = 'pages'
+    __tablename__ = 'activities'
     id = Column(Integer, primary_key=True)
     activity_id = Column(String)
     completed_streets = Column(Integer)
     date = Column(String)
     distance = Column(String)
+
+class Street(Base):
+    __tablename__ = 'streets'
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    city_name = Column(String)
+    activity_id = Column(Integer)
+    date = Column(String)
 
 engine = create_engine('sqlite:///pages.db')
 Base.metadata.create_all(engine)
@@ -30,6 +38,14 @@ def add_activity(data: ActivityData) -> None:
         date=data.date,
         distance=data.distance
     ))
+    for street in data.streets:
+        session.add(Street(
+            name=street.name, 
+            city_name=street.city_name,
+            activity_id=data.id,
+            date=data.date
+        ))
+    
     session.commit()
 
 def get_all_activities(page: int = 0):
