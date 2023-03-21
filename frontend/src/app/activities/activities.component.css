@@ -1,14 +1,63 @@
-.activities {
-    display: flex;
-    align-items: center;
-    flex-direction: column;
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 50px;
+}
+  
+h1 {
+    text-align: center;
+    font-size: 36px;
+    color: var(--primary-color);
+    text-shadow: 1px 1px 1px #000;
+}
+  
+table {
+    width: 100%;
+    margin-top: 50px;
+    border-collapse: collapse;
+}
+  
+thead th {
+    background-color: var(--primary-color);
+    color: #fff;
+    text-align: left;
+    padding: 10px;
+    font-size: 20px;
 }
 
-h1 {
-    color: #008080;
-    font-size: 2.5em;
-    font-weight: normal;
-    margin-bottom: 20px;
+td {
+    background-color: #fff;
+    color: #333;
+    padding: 10px;
+    font-size: 16px;
+    border-bottom: 1px solid #ccc;
+}
+  
+tr:hover {
+    background-color: #f5f5f5;
+}
+  
+td:first-child {
+    font-weight: bold;
+}
+  
+td:nth-child(3) {
     text-align: center;
-    font-variant: small-caps;
+}
+  
+td:nth-child(4) {
+    text-align: center;
+}
+  
+  
+.activity-date {
+    font-style: italic;
+}
+  
+.activity-distance {
+    color: #008080;
+}
+  
+.activity-streets {
+    color: #ffa500;
 }

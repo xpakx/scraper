@@ -1,4 +1,21 @@
-<h1>Streets</h1>
-<div class="streets">
-        <app-street *ngFor="let street of streets" [street]="street"></app-street>
-</div>
+<div class="container">
+        <h1>Streets</h1>
+        <table>
+           <thead>
+            <tr>
+               <th>#</th>
+               <th>Date</th>
+               <th>Street</th>
+               <th>City</th>
+             </tr>
+           </thead>
+           <tbody>
+                <tr *ngFor="let street of streets; let i = index">
+                        <td>#{{ i+1 }}</td>
+                        <td class="street-date">{{ street.date }}</td>
+                        <td class="street-name">{{ street.name }}</td>
+                        <td class="street-city">{{ street.city_name }}</td>
+                </tr>
+           </tbody>
+        </table>
+    </div>
