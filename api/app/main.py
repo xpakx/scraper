@@ -22,17 +22,19 @@ app.add_middleware(
 
 properties = PropertyResolver()
 
-consumer = Consumer()
+repo = repository.StreetRepository(properties.db_url)
+
+consumer = Consumer(repo)
 consumer.connect(properties.rabbit, properties.rabbit_port)
 consumer.start()
 
 @app.get("/activities")
 async def activities(page: Optional[int] = None):
-    return repository.get_all_activities(page if page else 0)
+    return repo.get_all_activities(page if page else 0)
 
 @app.get("/streets")
 async def streets(page: Optional[int] = None):
-    return repository.get_all_streets(page if page else 0)
+    return repo.get_all_streets(page if page else 0)
 
 @app.on_event("shutdown")
 async def shutdown_event():

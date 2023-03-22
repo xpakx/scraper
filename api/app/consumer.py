@@ -1,10 +1,13 @@
 import pika
 import threading
-from app.repository import add_activity
+from app.repository import StreetRepository
 from app.data import ActivityData
 import json
 
 class Consumer:
+    def __init__(self, repo: StreetRepository):
+        self.repo = repo
+
     def connect(self, host: str, port: int) -> None:
         params = pika.ConnectionParameters(host = host, port = port)
         self.connection = pika.BlockingConnection(parameters=params)
@@ -17,7 +20,7 @@ class Consumer:
 
     def process_message(self, channel, method, properties, body) -> None:
         print(f"Received message: {body.decode()}")
-        add_activity(ActivityData(**json.loads(body.decode())))
+        self.repo.add_activity(ActivityData(**json.loads(body.decode())))
 
     def start(self) -> None:
         self.thread = threading.Thread(target=self.consume_messages)

@@ -26,35 +26,37 @@ class Street(Base):
     activity_id = Column(Integer)
     date = Column(String)
 
-engine = create_engine('sqlite:///pages.db')
-Base.metadata.create_all(engine)
-Session = sessionmaker(bind=engine)
+class StreetRepository():
+    def __init__(self, url: str):
+        self.engine = create_engine(url)
+        Base.metadata.create_all(self.engine)
+        self.Session = sessionmaker(bind=self.engine)
 
-def add_activity(data: ActivityData) -> None:
-    session = Session()
-    session.add(Activity(
-        activity_id=data.id, 
-        completed_streets=data.completed_streets,
-        date=data.date,
-        distance=data.distance
-    ))
-    logger.info(data.streets)
-    for street in data.streets:
-        logger.info(street)
-        session.add(Street(
-            name=street['name'], 
-            city_name=street['city_name'],
-            activity_id=data.id,
-            date=data.date
+    def add_activity(self, data: ActivityData) -> None:
+        session = self.Session()
+        session.add(Activity(
+            activity_id=data.id, 
+            completed_streets=data.completed_streets,
+            date=data.date,
+            distance=data.distance
         ))
-    session.commit()
+        logger.info(data.streets)
+        for street in data.streets:
+            logger.info(street)
+            session.add(Street(
+                name=street['name'], 
+                city_name=street['city_name'],
+                activity_id=data.id,
+                date=data.date
+            ))
+        session.commit()
 
-def get_all_activities(page: int = 0):
-    session = Session()
-    offset = page * 20
-    return session.query(Activity).offset(offset).limit(20).all()
+    def get_all_activities(self, page: int = 0):
+        session = self.Session()
+        offset = page * 20
+        return session.query(Activity).offset(offset).limit(20).all()
 
-def get_all_streets(page: int = 0):
-    session = Session()
-    offset = page * 20
-    return session.query(Street).offset(offset).limit(20).all()
+    def get_all_streets(self, page: int = 0):
+        session = self.Session()
+        offset = page * 20
+        return session.query(Street).offset(offset).limit(20).all()
