@@ -1,8 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
-from data import ActivityData
-from data import Street
-from resolver import PropertyResolver
+from app.data import ActivityData
+from app.data import Street
+from app.resolver import PropertyResolver
 from typing import List
 
 

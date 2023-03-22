@@ -1,5 +1,5 @@
 import pika
-from data import ActivityData
+from app.data import ActivityData
 import json
 from dataclasses import asdict
 from typing import List

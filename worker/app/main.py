@@ -1,12 +1,12 @@
 from rocketry import Rocketry
 from rocketry.conds import every, after_success
 from rocketry.args import Return
-from downloader import CityStridesDownloader
+from app.downloader import CityStridesDownloader
 import repository
 import logging
-from publisher import Publisher
-from data import ActivityData
-from resolver import PropertyResolver
+from app.publisher import Publisher
+from app.data import ActivityData
+from app.resolver import PropertyResolver
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
