@@ -1,13 +1,13 @@
 from rocketry import Rocketry
 from rocketry.conds import every, after_success
 from rocketry.args import Return
-from app.downloader import CityStridesDownloader
+from downloader import CityStridesDownloader
 import repository
 import logging
-from app.publisher import Publisher
-from app.data import ActivityData
-from app.resolver import PropertyResolver
-from app.exceptions import ExtractionException
+from publisher import Publisher
+from data import ActivityData
+from resolver import PropertyResolver
+from exceptions import ExtractionException
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -16,6 +16,7 @@ scheduler = Rocketry()
 
 properties = PropertyResolver()
 downloader = CityStridesDownloader(properties)
+repo = repository.PageRepository(properties.db_url)
 
 rabbit = Publisher()
 rabbit.connect(properties.rabbit, properties.rabbit_port)
@@ -33,7 +34,7 @@ def do_process(page: bytes = Return('do_check')) -> None:
     text = downloader.extract(page)
     if(text == None):
         raise ExtractionException
-    changeDetected: bool = repository.test_changes(properties.url, text)
+    changeDetected: bool = repo.test_changes(properties.url, text)
     if(changeDetected):
         logger.info("Change detected")
         activities: list[ActivityData] = downloader.get_activities()
