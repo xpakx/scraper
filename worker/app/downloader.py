@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 from app.data import ActivityData
 from app.data import Street
 from app.resolver import PropertyResolver
-from typing import List
+from typing import List, Optional
 
 
 class CityStridesDownloader:
@@ -18,9 +18,11 @@ class CityStridesDownloader:
     def get_profile(self) -> bytes:
         return self.get_page(self.url)
 
-    def extract(self, page: bytes) -> str:
+    def extract(self, page: bytes) -> Optional[str]:
         soup = BeautifulSoup(page, "html.parser")
         streets = soup.find("div", {"class": "text-gray-500"})
+        if streets == None:
+            return None
         return str(streets)
 
     def get_activities(self) -> List[ActivityData]:

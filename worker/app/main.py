@@ -7,6 +7,7 @@ import logging
 from app.publisher import Publisher
 from app.data import ActivityData
 from app.resolver import PropertyResolver
+from app.extractionexception import ExtractionException
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -30,6 +31,8 @@ def do_check() -> bytes:
 def do_process(page: bytes = Return('do_check')) -> None:
     logger.info("Processing…")
     text = downloader.extract(page)
+    if(text == None):
+        raise ExtractionException
     changeDetected: bool = repository.test_changes(properties.url, text)
     if(changeDetected):
         logger.info("Change detected")
