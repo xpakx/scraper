@@ -2,7 +2,6 @@ from app.downloader import CityStridesDownloader
 from test.resolver import EmptyPropertyResolver
 import unittest
 from unittest.mock import patch
-from app.data import ActivityData
 
 class TestDownloader(unittest.TestCase):
     def test_extract_should_return_result(self):
@@ -86,4 +85,34 @@ class TestDownloader(unittest.TestCase):
         activities = list(downloader.get_activities())
         assert len(activities) == 0
 
-        
+    
+    @patch('requests.get')
+    def test_get_streets(self, mock_get):
+        downloader = CityStridesDownloader(EmptyPropertyResolver())
+        mock_response = """
+        <div id="street_1">
+            <div class="font-medium">Street 1</div>
+            <div class="font-light">City 1</div>
+        </div>
+        <div id="street_2">
+            <div class="font-medium">Street 2</div>
+            <div class="font-light">City 1</div>
+        </div>
+        """
+        mock_get.return_value.content = mock_response
+
+        activities = list(downloader.get_streets("1"))
+        assert len(activities) == 2
+        assert activities[0].name == 'Street 1'
+        assert activities[0].city_name == 'City 1'
+        assert activities[1].name == 'Street 2'
+        assert activities[1].city_name == 'City 1'
+
+    @patch('requests.get')
+    def test_get_streets_when_activity_list_empty(self, mock_get):
+        downloader = CityStridesDownloader(EmptyPropertyResolver())
+        mock_response = ""
+        mock_get.return_value.content = mock_response
+
+        activities = list(downloader.get_streets("1"))
+        assert len(activities) == 0  
