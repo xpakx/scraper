@@ -7,7 +7,7 @@ import logging
 from app.publisher import Publisher
 from app.data import ActivityData
 from app.resolver import PropertyResolver
-from app.extractionexception import ExtractionException
+from app.exceptions import ExtractionException
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
