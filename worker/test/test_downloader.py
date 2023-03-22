@@ -2,6 +2,7 @@ from app.downloader import CityStridesDownloader
 from test.resolver import EmptyPropertyResolver
 import unittest
 from unittest.mock import patch
+from app.data import ActivityData
 
 class TestDownloader(unittest.TestCase):
     def test_extract_should_return_result(self):
@@ -42,3 +43,47 @@ class TestDownloader(unittest.TestCase):
         expected_content = mock_response
         activities = downloader.get_page('http://example.com')
         assert activities == expected_content
+
+    @patch('requests.get')
+    def test_get_activities(self, mock_get):
+        downloader = CityStridesDownloader(EmptyPropertyResolver())
+        mock_response = """
+        <div id="activities">
+            <a id="activity_1">
+                <h2>date 1</h2>
+                <div class="text-gray-500">10 miles</div>
+                <span>5</span>
+            </a>
+            <a id="activity_2">
+                <h2>date 2</h2>
+                <div class="text-gray-500">5 miles</div>
+                <span>2</span>
+            </a>
+        </div>
+        """
+        mock_get.return_value.content = mock_response
+
+        activities = list(downloader.get_activities())
+        assert len(activities) == 2
+        assert activities[0].id == '1'
+        assert activities[0].completed_streets == '5'
+        assert activities[0].date == 'date 1'
+        assert activities[0].distance == '10 miles'
+        assert activities[1].id == '2'
+        assert activities[1].completed_streets == '2'
+        assert activities[1].date == 'date 2'
+        assert activities[1].distance == '5 miles'
+
+    @patch('requests.get')
+    def test_get_activities_when_activity_list_empty(self, mock_get):
+        downloader = CityStridesDownloader(EmptyPropertyResolver())
+        mock_response = """
+        <div id="activities">
+        </div>
+        """
+        mock_get.return_value.content = mock_response
+
+        activities = list(downloader.get_activities())
+        assert len(activities) == 0
+
+        
