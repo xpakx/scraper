@@ -14,11 +14,13 @@ export class ActivitiesService {
   constructor(private http: HttpClient) { 
   }
 
-  public getActivities(): Observable<Activity[]> {
-    return this.http.get<Activity[]>(`${this.apiServerUrl}/activities`);
+  public getActivities(page: number = 0): Observable<Activity[]> {
+    let params = new HttpParams().set('page', page);
+    return this.http.get<Activity[]>(`${this.apiServerUrl}/activities`, { params: params });
   }
 
-  public getStreets(): Observable<Street[]> {
-    return this.http.get<Street[]>(`${this.apiServerUrl}/streets`);
+  public getStreets(page: number = 0): Observable<Street[]> {
+    let params = new HttpParams().set('page', page);
+    return this.http.get<Street[]>(`${this.apiServerUrl}/streets`, { params: params });
   }
 }

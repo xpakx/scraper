@@ -11,11 +11,15 @@
            </thead>
            <tbody>
                 <tr *ngFor="let street of streets; let i = index">
-                        <td>#{{ i+1 }}</td>
+                        <td>#{{ i+1+page*20 }}</td>
                         <td class="street-date">{{ street.date }}</td>
                         <td class="street-name">{{ street.name }}</td>
                         <td class="street-city">{{ street.city_name }}</td>
                 </tr>
            </tbody>
         </table>
+        <div class="navigation">
+                <button (click)="prevPage()">prev</button>
+                <button (click)="nextPage()">next</button>
+        </div>
     </div>

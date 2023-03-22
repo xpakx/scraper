@@ -1,7 +1,7 @@
 from fastapi.testclient import TestClient
 from unittest import TestCase
 import app.main as main
-from app.data import ActivityData, Street
+from app.data import ActivityData
 
 class TestApi(TestCase):
     def setUp(self) -> None:
