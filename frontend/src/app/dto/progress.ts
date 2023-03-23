@@ -1,6 +1,6 @@
 export interface Progress {
     total: number;
     completed: number;
-    progress: string;
+    progress: String;
     city_completed: boolean
 }

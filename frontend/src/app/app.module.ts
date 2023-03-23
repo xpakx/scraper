@@ -6,12 +6,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ActivitiesComponent } from './activities/activities.component';
 import { StreetsComponent } from './streets/streets.component';
+import { ProgressBarComponent } from './utils/progress-bar/progress-bar.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ActivitiesComponent,
-    StreetsComponent
+    StreetsComponent,
+    ProgressBarComponent
   ],
   imports: [
     BrowserModule,

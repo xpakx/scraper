@@ -22,5 +22,5 @@
                 <button (click)="prevPage()">prev</button>
                 <button (click)="nextPage()">next</button>
         </div>
-        <div class="progress" *ngIf="progress">{{ progress.completed }}/{{ progress.total }} ({{ progress.progress }})</div>
+        <app-progress-bar *ngIf="progress" [completed]="progress.completed" [total]="progress.total" [finished]="progress.city_completed" [percentage]="progress.progress"></app-progress-bar>
 </div>
