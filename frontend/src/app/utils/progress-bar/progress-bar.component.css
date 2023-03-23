@@ -1,8 +1,9 @@
 .progress {
     height: 20px;
-    background-color: #f2f2f2;
+    background-color: #ddd;
     border-radius: 10px;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
+    margin-top: 10px;
     overflow: hidden;
     position: relative;
 }
@@ -22,5 +23,9 @@
     position: absolute;
     top: 0;
     width: 100%;
-    text-align: center;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 70%;
 }
