@@ -36,6 +36,12 @@ async def activities(page: Optional[int] = None):
 async def streets(page: Optional[int] = None):
     return repo.get_all_streets(page if page else 0)
 
+@app.get("/streets/progress")
+async def streets():
+    total = 2389
+    completed = repo.count_streets_by_city('Wrocław')
+    return { 'total': total, 'completed': completed, 'progress':  completed/total }
+
 @app.on_event("shutdown")
 async def shutdown_event():
     consumer.stop()

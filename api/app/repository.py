@@ -61,3 +61,7 @@ class StreetRepository():
         session = self.Session()
         offset = page * 20
         return session.query(Street).offset(offset).limit(20).all()
+    
+    def count_streets_by_city(self, city_name: str) -> int:
+        session = self.Session()
+        return session.query(Street).filter(Street.city_name == city_name).count()
