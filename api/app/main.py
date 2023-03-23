@@ -40,7 +40,8 @@ async def streets(page: Optional[int] = None):
 async def streets():
     total = 2389
     completed = repo.count_streets_by_city('Wrocław')
-    return { 'total': total, 'completed': completed, 'progress':  completed/total }
+    progress = completed/total if total > 0 else 0.
+    return { 'total': total, 'completed': completed, 'progress':  "{0:.2%}".format(progress), 'city_completed': completed >= total }
 
 @app.on_event("shutdown")
 async def shutdown_event():
