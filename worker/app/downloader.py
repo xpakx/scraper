@@ -12,7 +12,7 @@ class CityStridesDownloader:
         self.activities_url = properties.activities_url
         self.streets_url = properties.streets_url
 
-    def get_page(self, url) -> bytes:
+    def get_page(self, url: str) -> bytes:
         return requests.get(url).content
     
     def get_profile(self) -> bytes:

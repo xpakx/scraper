@@ -1,4 +1,4 @@
-from rocketry import Rocketry
+from rocketry import Rocketry 
 from rocketry.conds import every, after_success
 from rocketry.args import Return
 from downloader import CityStridesDownloader
@@ -32,8 +32,8 @@ def do_check() -> bytes:
 def do_process(page: bytes = Return('do_check')) -> None:
     logger.info("Processing…")
     text = downloader.extract(page)
-    if(text == None):
-        raise ExtractionException
+    if(text is None):
+        raise ExtractionException()
     changeDetected: bool = repo.test_changes(properties.url, text)
     if(changeDetected):
         logger.info("Change detected")
