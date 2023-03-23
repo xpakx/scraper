@@ -2,7 +2,7 @@ import hashlib
 import logging
 from typing import Optional
 from sqlalchemy import create_engine, Column, Integer, String
-from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import declarative_base # type: ignore
 from sqlalchemy.orm import sessionmaker
 
 logging.basicConfig(level=logging.INFO)
@@ -10,7 +10,7 @@ logger = logging.getLogger(__name__)
 
 Base = declarative_base()
 
-class Page(Base):
+class Page(Base): #type: ignore
     __tablename__ = 'pages'
     id = Column(Integer, primary_key=True)
     url = Column(String, unique=True)

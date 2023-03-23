@@ -4,10 +4,7 @@ import json
 from dataclasses import asdict
 from typing import List
 
-class Publisher:
-    connection = None
-    channel = None
-
+class Publisher():
     def connect(self, host: str, port: int) -> None:
         params = pika.ConnectionParameters(host = host, port = port)
         self.connection = pika.BlockingConnection(parameters=params)
@@ -27,7 +24,7 @@ class Publisher:
             self.channel.basic_publish(
                 exchange='pages', 
                 routing_key='page.changes', 
-                body = json.dumps(asdict(payload))
+                body = json.dumps(asdict(payload)) # type: ignore
             )
         
     def publish_all(self, activities: List[ActivityData]) -> None:

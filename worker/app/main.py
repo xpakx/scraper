@@ -8,6 +8,7 @@ from publisher import Publisher
 from data import ActivityData
 from resolver import PropertyResolver
 from exceptions import ExtractionException
+from typing import List
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -37,7 +38,7 @@ def do_process(page: bytes = Return('do_check')) -> None:
     changeDetected: bool = repo.test_changes(properties.url, text)
     if(changeDetected):
         logger.info("Change detected")
-        activities: list[ActivityData] = downloader.get_activities()
+        activities: List[ActivityData] = downloader.get_activities()
         rabbit.publish_all(activities)
 
 if __name__ == "__main__":
