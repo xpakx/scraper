@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Progress } from '../dto/progress';
 import { Street } from '../dto/street';
 import { ActivitiesService } from '../service/activities.service';
 
@@ -10,6 +11,7 @@ import { ActivitiesService } from '../service/activities.service';
 export class StreetsComponent implements OnInit {
   streets: Street[] = [];
   page: number = 0;
+  progress?: Progress;
 
   constructor(private service: ActivitiesService) { }
 
@@ -17,10 +19,17 @@ export class StreetsComponent implements OnInit {
     this.service.getStreets().subscribe({
       next: (response: Street[]) => this.onResponse(response)
     });
+    this.service.getProgress().subscribe({
+      next: (response: Progress) => this.onProgressResponse(response)
+    });
   }
 
   onResponse(response: Street[]): void {
     this.streets = response;
+  }
+
+  onProgressResponse(response: Progress): void {
+    this.progress = response;
   }
 
   nextPage(): void {
