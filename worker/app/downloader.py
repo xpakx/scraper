@@ -47,7 +47,7 @@ class CityStridesDownloader():
         return '{km:.2f}'.format(km = dist_in_km)
     
     def transform_date(self, date: str) -> str:
-        return datetime.strptime(date, "%B %d, %Y").strftime("%d-%m-%Y")
+        return datetime.strptime(date, "%B %d, %Y").strftime("%Y-%m-%d")
 
     def get_streets(self, activity_id: str) -> List[Street]:
         soup = BeautifulSoup(self.get_page(self.streets_url.format(page=1, id=activity_id)), "html.parser")

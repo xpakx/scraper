@@ -12,9 +12,9 @@
            <tbody>
                 <tr *ngFor="let activity of activities; let i = index">
                         <td>#{{ i+1+page*20 }}</td>
-                        <td class="activity-date">{{ activity.date }}</td>
+                        <td class="activity-date">{{ activity.date | date : 'longDate' }}</td>
                         <td class="activity-streets">{{ activity.completed_streets }}</td>
-                        <td class="activity-distance">{{ activity.distance }}</td>
+                        <td class="activity-distance">{{ activity.distance }} km</td>
                 </tr>
            </tbody>
         </table>

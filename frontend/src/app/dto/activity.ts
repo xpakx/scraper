@@ -2,6 +2,6 @@ export interface Activity {
     id: number,
     activity_id: String,
     completed_streets: number,
-    date: String,
+    date: Date,
     distance: String
 }
