@@ -4,6 +4,7 @@ from data import ActivityData
 from data import Street
 from resolver import PropertyResolver
 from typing import List, Optional, Any
+from datetime import datetime
 
 
 class CityStridesDownloader():
@@ -34,11 +35,19 @@ class CityStridesDownloader():
 
     def to_activity(self, html: Any) -> ActivityData:
         id = html['id'].strip().replace('activity_', '')
-        date = html.find('h2').text.strip()
-        distance = html.find('div', {'class' : 'text-gray-500'}).text.strip()
+        date = self.transform_date(html.find('h2').text.strip())
+        distance = self.distance_to_km(html.find('div', {'class' : 'text-gray-500'}).text.strip())
         completed = html.find('span').text.strip()
         streets = self.get_streets(id)
         return ActivityData(id, completed, date, distance, streets)
+    
+    def distance_to_km(self, distance: str) -> str:
+        miles = distance.replace('miles', '').strip()
+        dist_in_km = float(miles) * 1.60934
+        return '{km:.2f}'.format(km = dist_in_km)
+    
+    def transform_date(self, date: str) -> str:
+        return datetime.strptime(date, "%B %d, %Y").strftime("%d-%m-%Y")
 
     def get_streets(self, activity_id: str) -> List[Street]:
         soup = BeautifulSoup(self.get_page(self.streets_url.format(page=1, id=activity_id)), "html.parser")
