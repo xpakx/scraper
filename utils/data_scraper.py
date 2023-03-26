@@ -2,6 +2,12 @@ from bs4 import BeautifulSoup
 import requests
 from typing import List
 import json
+import logging
+
+
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def getAreas(url: str) -> List[str]:
     response = requests.get(url)
@@ -36,27 +42,22 @@ def get_streets_for_area(name: str) -> List[str]:
             streets.append(street['tags']['name'])
     return list(set(streets))
 
-
-'''
+logger.info("Getting areas from Wikipedia…")
 areas = getAreas('https://pl.wikipedia.org/wiki/Podzia%C5%82_administracyjny_Wroc%C5%82awia')
-save_obj(areas, 'areas')
-'''
-
-areas = getListFromFile('areas')
-
-'''
-for area in areas:
-    streets = get_streets_for_area(area)
-    save_obj(streets, area.replace(' ', '_').lower())
-'''
 
 areas_result = []
 streets_result = []
+
+
+logger.info("Collecting street data with overpass API…")
 for area in areas:
-    streets = getListFromFile(area.replace(' ', '_').lower())
+    logger.info(f"Collecting data for {area}…")
+    streets = get_streets_for_area(area)
     areas_result.append({'area': area, 'streets': streets})
     streets_result.extend(streets)
 
+
+logger.info("Saving data set…")
 streets_result = list(set(streets_result))
 result = {'areas': areas_result, 'streets': streets_result, 'street_count': len(streets_result)}
 save_obj(result, 'dataset')
