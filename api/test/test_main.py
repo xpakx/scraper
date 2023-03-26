@@ -1,5 +1,6 @@
 import os
 os.environ['DB_URL'] = 'sqlite:///test.db'
+os.environ['INITIAL_DATA_FILE'] = 'nonexistent-file'
 
 from fastapi.testclient import TestClient
 from unittest import TestCase

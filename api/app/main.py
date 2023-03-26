@@ -4,6 +4,7 @@ from app.consumer import Consumer
 from app import repository
 from app.resolver import PropertyResolver
 from typing import Optional
+from app.populate_db import DataInit
 
 origins = [
     "http://localhost",
@@ -23,6 +24,10 @@ app.add_middleware(
 properties = PropertyResolver()
 
 repo = repository.StreetRepository(properties.db_url)
+
+dinit = DataInit()
+if(dinit.test(properties.initial_data_file, repo)):
+    dinit.populate(properties.initial_data_file, repo)
 
 consumer = Consumer(repo)
 consumer.connect(properties.rabbit, properties.rabbit_port)

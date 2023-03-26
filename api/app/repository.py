@@ -26,6 +26,18 @@ class Street(Base):
     activity_id = Column(Integer)
     date = Column(String)
 
+class StreetData(Base):
+    __tablename__ = 'street_data'
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    areas = Column(String)
+
+class AreaData(Base):
+    __tablename__ = 'area_data'
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    streets = Column(Integer)
+
 class StreetRepository():
     def __init__(self, url: str):
         self.engine = create_engine(url)
@@ -65,3 +77,25 @@ class StreetRepository():
     def count_streets_by_city(self, city_name: str) -> int:
         session = self.Session()
         return session.query(Street).filter(Street.city_name == city_name).count()
+
+    def add_area_data(self, data) -> None:
+        session = self.Session()
+        for area in data:
+            session.add(AreaData(
+            name=area['area'], 
+            streets=int(area['street_count']),
+        ))
+        session.commit()
+
+    def add_street_data(self, data) -> None:
+        session = self.Session()
+        for street in data:
+            session.add(StreetData(
+            name=street['name'], 
+            areas=';' + ';'.join(street['areas']) + ';',
+        ))
+        session.commit()
+
+    def has_areas_data(self) -> bool:
+        session = self.Session()
+        return session.query(AreaData).first() is not None
