@@ -14,7 +14,7 @@ def getAreas(url: str) -> List[str]:
             column_data.append(cells[0].get_text().strip())
     return column_data
 
-def getAreasFromFile(name: str) -> List[str]:
+def getListFromFile(name: str) -> List[str]:
     with open(f'data/{name}.json', 'r', encoding='utf-8') as f:
         return json.load(f)
 
@@ -42,8 +42,21 @@ areas = getAreas('https://pl.wikipedia.org/wiki/Podzia%C5%82_administracyjny_Wro
 save_obj(areas, 'areas')
 '''
 
-areas = getAreasFromFile('areas')
+areas = getListFromFile('areas')
 
+'''
 for area in areas:
     streets = get_streets_for_area(area)
     save_obj(streets, area.replace(' ', '_').lower())
+'''
+
+areas_result = []
+streets_result = []
+for area in areas:
+    streets = getListFromFile(area.replace(' ', '_').lower())
+    areas_result.append({'area': area, 'streets': streets})
+    streets_result.extend(streets)
+
+streets_result = list(set(streets_result))
+result = {'areas': areas_result, 'streets': streets_result, 'street_count': len(streets_result)}
+save_obj(result, 'dataset')
