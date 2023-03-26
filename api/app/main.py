@@ -38,13 +38,13 @@ async def activities(page: Optional[int] = None):
     return repo.get_all_activities(page if page else 0)
 
 @app.get("/streets")
-async def streets(page: Optional[int] = None):
-    return repo.get_all_streets(page if page else 0)
+async def streets(page: Optional[int] = None, area: Optional[str] = None):
+    return repo.get_all_streets_for_area(area, page if page else 0) if area else repo.get_all_streets(page if page else 0)
 
 @app.get("/streets/progress")
-async def streets():
-    total = 2389
-    completed = repo.count_streets_by_city('Wrocław')
+async def streets(area: Optional[str] = None):
+    total = repo.get_total_streets(area if area else 'Wrocław')
+    completed = repo.count_streets_by_area(area) if area else repo.count_streets_by_city('Wrocław')
     progress = completed/total if total > 0 else 0.
     return { 'total': total, 'completed': completed, 'progress':  "{0:.2%}".format(progress), 'city_completed': completed >= total }
 

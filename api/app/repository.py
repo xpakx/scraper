@@ -105,3 +105,17 @@ class StreetRepository():
     def has_areas_data(self) -> bool:
         session = self.Session()
         return session.query(AreaData).first() is not None
+    
+    def get_all_streets_for_area(self, area: str, page: int = 0):
+        session = self.Session()
+        offset = page * 20
+        return session.query(Street).filter(Street.areas.like(f'%;{area};%')).offset(offset).limit(20).all()
+    
+    def get_total_streets(self, area: str) -> int:
+        session = self.Session()
+        streets = session.query(AreaData.streets).filter(AreaData.name == area).first()
+        return streets[0] if streets else 0
+    
+    def count_streets_by_area(self, area: str) -> int:
+        session = self.Session()
+        return session.query(Street).filter(Street.areas.like(f'%;{area};%')).count()
