@@ -25,6 +25,7 @@ class Street(Base):
     city_name = Column(String)
     activity_id = Column(Integer)
     date = Column(String)
+    areas = Column(String)
 
 class StreetData(Base):
     __tablename__ = 'street_data'
@@ -55,14 +56,19 @@ class StreetRepository():
         ))
         logger.info(data.streets)
         for street in data.streets:
-            logger.info(street)
-            session.add(Street(
+            self.add_street(data, session, street)
+        session.commit()
+
+    def add_street(self, data, session, street):
+        logger.info(street)
+        areas = session.query(StreetData.areas).filter(StreetData.name == street['name']).first()
+        session.add(Street(
                 name=street['name'], 
                 city_name=street['city_name'],
                 activity_id=data.id,
-                date=data.date
+                date=data.date,
+                areas= str(areas) if areas else ''
             ))
-        session.commit()
 
     def get_all_activities(self, page: int = 0):
         session = self.Session()
