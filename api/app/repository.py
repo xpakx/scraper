@@ -1,6 +1,6 @@
 import logging
 from typing import Optional
-from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy import create_engine, Column, Integer, String, Float
 from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 from app.data import ActivityData
@@ -16,7 +16,7 @@ class Activity(Base):
     activity_id = Column(String)
     completed_streets = Column(Integer)
     date = Column(String)
-    distance = Column(String)
+    distance = Column(Float)
 
 class Street(Base):
     __tablename__ = 'streets'
