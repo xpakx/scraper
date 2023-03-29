@@ -101,7 +101,6 @@ class TestApi(TestCase):
         result = response.json()
         assert len(result) == 0
 
-
     def test_streets__should_return_specific_pages(self):
         client = TestClient(main.app)
         main.repo.add_activity(ActivityData('1', 12, 'date 1', 5.00, [
@@ -143,3 +142,107 @@ class TestApi(TestCase):
         assert response.status_code == 200
         result = response.json()
         assert len(result) == 0
+
+    def test_streets__should_return_empty_list_for_area(self):
+        client = TestClient(main.app)
+        response = client.get("/streets?area=Area")
+        assert response.status_code == 200
+        assert response.json() == []
+
+    def test_streets__should_return_streets_for_area(self):
+        client = TestClient(main.app)
+        main.repo.add_street_data([{'name': 'Street 1', 'areas': ['Area']}])
+        main.repo.add_activity(
+            ActivityData(
+                '1', 
+                12, 
+                'date 1',
+                5.00, 
+                [{'name':'Street 1', 'city_name':'City 1'}, {'name':'Street 2', 'city_name':'City 1'}]
+            )
+        )
+        response = client.get("/streets?area=Area")
+        assert response.status_code == 200
+        result = response.json()
+        print(result)
+        assert len(result) == 1
+        assert result[0]['name'] == 'Street 1'
+        assert result[0]['city_name'] == 'City 1'
+
+    def test_progress__should_return_progress_for_city(self):
+        client = TestClient(main.app)
+        main.repo.add_area_data([{'area': 'Wrocław', 'street_count': 3}])
+        main.repo.add_activity(
+            ActivityData(
+                '1', 
+                12, 
+                'date 1',
+                5.00, 
+                [{'name':'Street 1', 'city_name':'Wrocław'}, {'name':'Street 2', 'city_name':'Wrocław'}]
+            )
+        )
+        response = client.get("/streets/progress")
+        assert response.status_code == 200
+        result = response.json()
+        assert result['total'] == 3
+        assert result['completed'] == 2   
+        assert result['city_completed'] == False  
+
+    def test_progress__should_return_progress_for_completed_city(self):
+        client = TestClient(main.app)
+        main.repo.add_area_data([{'area': 'Wrocław', 'street_count': 2}])
+        main.repo.add_activity(
+            ActivityData(
+                '1', 
+                12, 
+                'date 1',
+                5.00, 
+                [{'name':'Street 1', 'city_name':'Wrocław'}, {'name':'Street 2', 'city_name':'Wrocław'}]
+            )
+        )
+        response = client.get("/streets/progress")
+        assert response.status_code == 200
+        result = response.json()
+        assert result['total'] == 2
+        assert result['completed'] == 2   
+        assert result['city_completed'] == True  
+
+    def test_progress__should_return_progress_for_area(self):
+        client = TestClient(main.app)
+        main.repo.add_area_data([{'area': 'Area', 'street_count': 3}])       
+        main.repo.add_street_data([{'name': 'Street 1', 'areas': ['Area']}, {'name': 'Street 2', 'areas': ['Area']}])
+        main.repo.add_activity(
+            ActivityData(
+                '1', 
+                12, 
+                'date 1',
+                5.00, 
+                [{'name':'Street 1', 'city_name':'City'}, {'name':'Street 2', 'city_name':'City'}]
+            )
+        )
+        response = client.get("/streets/progress?area=Area")
+        assert response.status_code == 200
+        result = response.json()
+        assert result['total'] == 3
+        assert result['completed'] == 2   
+        assert result['city_completed'] == False  
+
+    def test_progress__should_return_progress_for_completed_area(self):
+        client = TestClient(main.app)
+        main.repo.add_area_data([{'area': 'Area', 'street_count': 2}])
+        main.repo.add_street_data([{'name': 'Street 1', 'areas': ['Area']}, {'name': 'Street 2', 'areas': ['Area']}])
+        main.repo.add_activity(
+            ActivityData(
+                '1', 
+                12, 
+                'date 1',
+                5.00, 
+                [{'name':'Street 1', 'city_name':'City'}, {'name':'Street 2', 'city_name':'City'}]
+            )
+        )
+        response = client.get("/streets/progress?area=Area")
+        assert response.status_code == 200
+        result = response.json()
+        assert result['total'] == 2
+        assert result['completed'] == 2   
+        assert result['city_completed'] == True  

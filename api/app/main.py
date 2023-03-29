@@ -42,7 +42,7 @@ async def streets(page: Optional[int] = None, area: Optional[str] = None):
     return repo.get_all_streets_for_area(area, page if page else 0) if area else repo.get_all_streets(page if page else 0)
 
 @app.get("/streets/progress")
-async def streets(area: Optional[str] = None):
+async def progress(area: Optional[str] = None):
     total = repo.get_total_streets(area if area else 'Wrocław')
     completed = repo.count_streets_by_area(area) if area else repo.count_streets_by_city('Wrocław')
     progress = completed/total if total > 0 else 0.
