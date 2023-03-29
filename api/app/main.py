@@ -36,11 +36,11 @@ consumer.connect(properties.rabbit, properties.rabbit_port)
 consumer.start()
 
 @app.get("/activities")
-async def activities(page: Optional[int] = None) -> List[Activity]:
+async def activities(page: Optional[int] = None):
     return repo.get_all_activities(page if page else 0)
 
 @app.get("/streets")
-async def streets(page: Optional[int] = None, area: Optional[str] = None) -> List[Street]:
+async def streets(page: Optional[int] = None, area: Optional[str] = None):
     return repo.get_all_streets_for_area(area, page if page else 0) if area else repo.get_all_streets(page if page else 0)
 
 @app.get("/streets/progress")
