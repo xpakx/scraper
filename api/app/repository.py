@@ -1,9 +1,10 @@
 import logging
 from typing import Optional
 from sqlalchemy import create_engine, Column, Integer, String, Float
-from sqlalchemy.orm import declarative_base #type: ignore
+from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 from app.data import ActivityData
+from app.data import Street as ActivityDataStreet
 from typing import List
 
 logging.basicConfig(level=logging.INFO)
@@ -44,7 +45,7 @@ class StreetRepository():
     def __init__(self, url: str):
         self.engine = create_engine(url)
         self.Base = Base
-        Base.metadata.create_all(self.engine)
+        Base.metadata.create_all(self.engine) #type: ignore
         self.Session = sessionmaker(bind=self.engine)
 
     def add_activity(self, data: ActivityData) -> None:
@@ -60,7 +61,7 @@ class StreetRepository():
             self.add_street(data, session, street)
         session.commit()
 
-    def add_street(self, data: dict, session, street) -> None:
+    def add_street(self, data: ActivityData, session, street) -> None:
         logger.info(street)
         areas = session.query(StreetData.areas).filter(StreetData.name == street['name']).first()
         session.add(Street(
