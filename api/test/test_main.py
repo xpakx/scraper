@@ -24,7 +24,7 @@ class TestApi(TestCase):
     def test_activities__should_return_activities(self):
         client = TestClient(main.app)
         main.repo.add_activity(
-            ActivityData('1', 12, 'date 1','5 km', [])
+            ActivityData('1', 12, 'date 1', 5.00, [])
         )
         response = client.get("/activities")
         assert response.status_code == 200
@@ -32,7 +32,7 @@ class TestApi(TestCase):
         assert len(result) == 1
         assert result[0]['completed_streets'] == 12
         assert result[0]['date'] == 'date 1'
-        assert result[0]['distance'] == '5 km'
+        assert result[0]['distance'] ==  5.00
 
     def test_streets__should_return_empty_list(self):
         client = TestClient(main.app)
@@ -47,7 +47,7 @@ class TestApi(TestCase):
                 '1', 
                 12, 
                 'date 1',
-                '5 km', 
+                5.00, 
                 [{'name':'Street 1', 'city_name':'City 1'}, {'name':'Street 2', 'city_name':'City 1'}]
             )
         )
@@ -63,31 +63,31 @@ class TestApi(TestCase):
 
     def test_activities__should_return_specific_pages(self):
         client = TestClient(main.app)
-        main.repo.add_activity(ActivityData('1', 12, 'date 1','5 km', []))
-        main.repo.add_activity(ActivityData('2', 12, 'date 1','5 km', []))
-        main.repo.add_activity(ActivityData('3', 12, 'date 1','5 km', []))
-        main.repo.add_activity(ActivityData('4', 12, 'date 1','5 km', []))
-        main.repo.add_activity(ActivityData('5', 12, 'date 1','5 km', []))
-        main.repo.add_activity(ActivityData('6', 12, 'date 1','5 km', []))
-        main.repo.add_activity(ActivityData('7', 12, 'date 1','5 km', []))
-        main.repo.add_activity(ActivityData('8', 12, 'date 1','5 km', []))
-        main.repo.add_activity(ActivityData('9', 12, 'date 1','5 km', []))
-        main.repo.add_activity(ActivityData('10', 12, 'date 1','5 km', []))
-        main.repo.add_activity(ActivityData('11', 12, 'date 1','5 km', []))
-        main.repo.add_activity(ActivityData('12', 12, 'date 1','5 km', []))
-        main.repo.add_activity(ActivityData('13', 12, 'date 1','5 km', []))
-        main.repo.add_activity(ActivityData('14', 12, 'date 1','5 km', []))
-        main.repo.add_activity(ActivityData('15', 12, 'date 1','5 km', []))
-        main.repo.add_activity(ActivityData('16', 12, 'date 1','5 km', []))
-        main.repo.add_activity(ActivityData('17', 12, 'date 1','5 km', []))
-        main.repo.add_activity(ActivityData('18', 12, 'date 1','5 km', []))
-        main.repo.add_activity(ActivityData('19', 12, 'date 1','5 km', []))
-        main.repo.add_activity(ActivityData('20', 12, 'date 1','5 km', []))
-        main.repo.add_activity(ActivityData('21', 12, 'date 1','5 km', []))
-        main.repo.add_activity(ActivityData('22', 12, 'date 1','5 km', []))
-        main.repo.add_activity(ActivityData('23', 12, 'date 1','5 km', []))
-        main.repo.add_activity(ActivityData('24', 12, 'date 1','5 km', []))
-        main.repo.add_activity(ActivityData('25', 12, 'date 1','5 km', []))
+        main.repo.add_activity(ActivityData('1', 12, 'date 1', 5.00, []))
+        main.repo.add_activity(ActivityData('2', 12, 'date 1', 5.00, []))
+        main.repo.add_activity(ActivityData('3', 12, 'date 1', 5.00, []))
+        main.repo.add_activity(ActivityData('4', 12, 'date 1', 5.00, []))
+        main.repo.add_activity(ActivityData('5', 12, 'date 1', 5.00, []))
+        main.repo.add_activity(ActivityData('6', 12, 'date 1', 5.00, []))
+        main.repo.add_activity(ActivityData('7', 12, 'date 1', 5.00, []))
+        main.repo.add_activity(ActivityData('8', 12, 'date 1', 5.00, []))
+        main.repo.add_activity(ActivityData('9', 12, 'date 1', 5.00, []))
+        main.repo.add_activity(ActivityData('10', 12, 'date 1', 5.00, []))
+        main.repo.add_activity(ActivityData('11', 12, 'date 1', 5.00, []))
+        main.repo.add_activity(ActivityData('12', 12, 'date 1', 5.00, []))
+        main.repo.add_activity(ActivityData('13', 12, 'date 1', 5.00, []))
+        main.repo.add_activity(ActivityData('14', 12, 'date 1', 5.00, []))
+        main.repo.add_activity(ActivityData('15', 12, 'date 1', 5.00, []))
+        main.repo.add_activity(ActivityData('16', 12, 'date 1', 5.00, []))
+        main.repo.add_activity(ActivityData('17', 12, 'date 1', 5.00, []))
+        main.repo.add_activity(ActivityData('18', 12, 'date 1', 5.00, []))
+        main.repo.add_activity(ActivityData('19', 12, 'date 1', 5.00, []))
+        main.repo.add_activity(ActivityData('20', 12, 'date 1', 5.00, []))
+        main.repo.add_activity(ActivityData('21', 12, 'date 1', 5.00, []))
+        main.repo.add_activity(ActivityData('22', 12, 'date 1', 5.00, []))
+        main.repo.add_activity(ActivityData('23', 12, 'date 1', 5.00, []))
+        main.repo.add_activity(ActivityData('24', 12, 'date 1', 5.00, []))
+        main.repo.add_activity(ActivityData('25', 12, 'date 1', 5.00, []))
         response = client.get("/activities")
         assert response.status_code == 200
         result = response.json()
@@ -104,7 +104,7 @@ class TestApi(TestCase):
 
     def test_streets__should_return_specific_pages(self):
         client = TestClient(main.app)
-        main.repo.add_activity(ActivityData('1', 12, 'date 1','5 km', [
+        main.repo.add_activity(ActivityData('1', 12, 'date 1', 5.00, [
             {'name':'Street 1', 'city_name':'City 1'},
             {'name':'Street 2', 'city_name':'City 1'},
             {'name':'Street 3', 'city_name':'City 1'},
