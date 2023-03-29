@@ -1,16 +1,17 @@
 import logging
 from typing import Optional
 from sqlalchemy import create_engine, Column, Integer, String, Float
-from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import declarative_base #type: ignore
 from sqlalchemy.orm import sessionmaker
 from app.data import ActivityData
+from typing import List
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 Base = declarative_base()
 
-class Activity(Base):
+class Activity(Base): #type: ignore
     __tablename__ = 'activities'
     id = Column(Integer, primary_key=True)
     activity_id = Column(String)
@@ -18,7 +19,7 @@ class Activity(Base):
     date = Column(String)
     distance = Column(Float)
 
-class Street(Base):
+class Street(Base): #type: ignore
     __tablename__ = 'streets'
     id = Column(Integer, primary_key=True)
     name = Column(String)
@@ -27,13 +28,13 @@ class Street(Base):
     date = Column(String)
     areas = Column(String)
 
-class StreetData(Base):
+class StreetData(Base): #type: ignore
     __tablename__ = 'street_data'
     id = Column(Integer, primary_key=True)
     name = Column(String)
     areas = Column(String)
 
-class AreaData(Base):
+class AreaData(Base): #type: ignore
     __tablename__ = 'area_data'
     id = Column(Integer, primary_key=True)
     name = Column(String)
@@ -59,7 +60,7 @@ class StreetRepository():
             self.add_street(data, session, street)
         session.commit()
 
-    def add_street(self, data, session, street):
+    def add_street(self, data: dict, session, street) -> None:
         logger.info(street)
         areas = session.query(StreetData.areas).filter(StreetData.name == street['name']).first()
         session.add(Street(
@@ -70,12 +71,12 @@ class StreetRepository():
                 areas= str(areas) if areas else ''
             ))
 
-    def get_all_activities(self, page: int = 0):
+    def get_all_activities(self, page: int = 0) -> List[Activity]:
         session = self.Session()
         offset = page * 20
         return session.query(Activity).offset(offset).limit(20).all()
 
-    def get_all_streets(self, page: int = 0):
+    def get_all_streets(self, page: int = 0) -> List[Street]:
         session = self.Session()
         offset = page * 20
         return session.query(Street).offset(offset).limit(20).all()
@@ -84,7 +85,7 @@ class StreetRepository():
         session = self.Session()
         return session.query(Street).filter(Street.city_name == city_name).count()
 
-    def add_area_data(self, data) -> None:
+    def add_area_data(self, data: dict) -> None:
         session = self.Session()
         for area in data:
             session.add(AreaData(
@@ -93,7 +94,7 @@ class StreetRepository():
         ))
         session.commit()
 
-    def add_street_data(self, data) -> None:
+    def add_street_data(self, data: dict) -> None:
         session = self.Session()
         for street in data:
             session.add(StreetData(
@@ -106,7 +107,7 @@ class StreetRepository():
         session = self.Session()
         return session.query(AreaData).first() is not None
     
-    def get_all_streets_for_area(self, area: str, page: int = 0):
+    def get_all_streets_for_area(self, area: str, page: int = 0) -> List[Street]:
         session = self.Session()
         offset = page * 20
         return session.query(Street).filter(Street.areas.like(f'%;{area};%')).offset(offset).limit(20).all()

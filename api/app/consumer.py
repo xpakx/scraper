@@ -18,7 +18,7 @@ class Consumer:
         self.channel.basic_consume(queue='pages.queue', on_message_callback=self.process_message, auto_ack=True)
         self.channel.start_consuming()
 
-    def process_message(self, channel, method, properties, body) -> None:
+    def process_message(self, channel, method, properties, body) -> None: #type: ignore
         print(f"Received message: {body.decode()}")
         self.repo.add_activity(ActivityData(**json.loads(body.decode())))
 
