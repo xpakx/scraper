@@ -20,24 +20,24 @@ class StreetRepository():
     def add_activity(self, data: ActivityData) -> None:
         session = self.Session()
         session.add(Activity(
-            activity_id=data.id, 
-            completed_streets=data.completed_streets,
-            date=data.date,
-            distance=data.distance
+            activity_id=data['id'], 
+            completed_streets=data['completed_streets'],
+            date=data['date'],
+            distance=data['distance']
         ))
-        logger.info(data.streets)
-        for street in data.streets:
+        logger.info(data['streets'])
+        for street in data['streets']:
             self.add_street(data, session, street)
         session.commit()
 
-    def add_street(self, data: ActivityData, session, street) -> None:
+    def add_street(self, data: ActivityData, session, street: ActivityDataStreet) -> None: #type: ignore
         logger.info(street)
         areas = session.query(StreetData.areas).filter(StreetData.name == street['name']).first()
         session.add(Street(
                 name=street['name'], 
                 city_name=street['city_name'],
-                activity_id=data.id,
-                date=data.date,
+                activity_id=data['id'],
+                date=data['date'],
                 areas= str(areas) if areas else ''
             ))
 

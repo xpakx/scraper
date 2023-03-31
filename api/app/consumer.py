@@ -20,7 +20,7 @@ class Consumer:
 
     def process_message(self, channel, method, properties, body) -> None: #type: ignore
         print(f"Received message: {body.decode()}")
-        self.repo.add_activity(ActivityData(**json.loads(body.decode())))
+        self.repo.add_activity(json.loads(body.decode()))
 
     def start(self) -> None:
         self.thread = threading.Thread(target=self.consume_messages)
