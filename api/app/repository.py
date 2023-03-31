@@ -5,12 +5,19 @@ from sqlalchemy.orm import declarative_base
 from sqlalchemy.orm import sessionmaker
 from app.data import ActivityData
 from app.data import Street as ActivityDataStreet
-from typing import List
+from typing import List, TypedDict
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 Base = declarative_base()
+
+class ActivityDict(TypedDict):
+    id: int
+    activity_id: str
+    completed_streets: int
+    date: str
+    distance: float
 
 class Activity(Base): #type: ignore
     __tablename__ = 'activities'
@@ -20,6 +27,24 @@ class Activity(Base): #type: ignore
     date = Column(String)
     distance = Column(Float)
 
+    @property
+    def serialize(self) -> ActivityDict:
+        return {
+            'id': int(self.id), 
+            'activity_id': str(self.activity_id),
+            'completed_streets': int(self.completed_streets),
+            'date': str(self.date),
+            'distance': float(self.distance)
+        }
+
+class StreetDict(TypedDict):
+    id: int
+    name: str
+    city_name: str
+    activity_id: int
+    date: str
+    areas: str
+
 class Street(Base): #type: ignore
     __tablename__ = 'streets'
     id = Column(Integer, primary_key=True)
@@ -28,6 +53,17 @@ class Street(Base): #type: ignore
     activity_id = Column(Integer)
     date = Column(String)
     areas = Column(String)
+
+    @property
+    def serialize(self) -> StreetDict:
+        return {
+            'id': int(self.id), 
+            'name': str(self.name),
+            'city_name': str(self.city_name),
+            'activity_id': int(self.activity_id),
+            'date': str(self.date),
+            'areas': str(self.areas)
+        }
 
 class StreetData(Base): #type: ignore
     __tablename__ = 'street_data'
@@ -116,7 +152,7 @@ class StreetRepository():
     def get_total_streets(self, area: str) -> int:
         session = self.Session()
         streets = session.query(AreaData.streets).filter(AreaData.name == area).first()
-        return streets[0] if streets else 0
+        return int(streets[0]) if streets else 0
     
     def count_streets_by_area(self, area: str) -> int:
         session = self.Session()
