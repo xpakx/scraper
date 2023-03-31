@@ -24,7 +24,7 @@ class TestApi(TestCase):
     def test_activities__should_return_activities(self):
         client = TestClient(main.app)
         main.repo.add_activity(
-            ActivityData('1', 12, 'date 1', 5.00, [])
+            {'id': '1', 'completed_streets': 12, 'date': 'date 1', 'distance': 5.00, 'streets': []}
         )
         response = client.get("/activities")
         assert response.status_code == 200
@@ -43,13 +43,13 @@ class TestApi(TestCase):
     def test_streets__should_return_streets(self):
         client = TestClient(main.app)
         main.repo.add_activity(
-            ActivityData(
-                '1', 
-                12, 
-                'date 1',
-                5.00, 
-                [{'name':'Street 1', 'city_name':'City 1'}, {'name':'Street 2', 'city_name':'City 1'}]
-            )
+            {
+              'id': '1', 
+              'completed_streets': 12, 
+              'date': 'date 1', 
+              'distance': 5.00, 
+              'streets': [{'name':'Street 1', 'city_name':'City 1'}, {'name':'Street 2', 'city_name':'City 1'}]
+            }
         )
         response = client.get("/streets")
         assert response.status_code == 200
@@ -63,31 +63,10 @@ class TestApi(TestCase):
 
     def test_activities__should_return_specific_pages(self):
         client = TestClient(main.app)
-        main.repo.add_activity(ActivityData('1', 12, 'date 1', 5.00, []))
-        main.repo.add_activity(ActivityData('2', 12, 'date 1', 5.00, []))
-        main.repo.add_activity(ActivityData('3', 12, 'date 1', 5.00, []))
-        main.repo.add_activity(ActivityData('4', 12, 'date 1', 5.00, []))
-        main.repo.add_activity(ActivityData('5', 12, 'date 1', 5.00, []))
-        main.repo.add_activity(ActivityData('6', 12, 'date 1', 5.00, []))
-        main.repo.add_activity(ActivityData('7', 12, 'date 1', 5.00, []))
-        main.repo.add_activity(ActivityData('8', 12, 'date 1', 5.00, []))
-        main.repo.add_activity(ActivityData('9', 12, 'date 1', 5.00, []))
-        main.repo.add_activity(ActivityData('10', 12, 'date 1', 5.00, []))
-        main.repo.add_activity(ActivityData('11', 12, 'date 1', 5.00, []))
-        main.repo.add_activity(ActivityData('12', 12, 'date 1', 5.00, []))
-        main.repo.add_activity(ActivityData('13', 12, 'date 1', 5.00, []))
-        main.repo.add_activity(ActivityData('14', 12, 'date 1', 5.00, []))
-        main.repo.add_activity(ActivityData('15', 12, 'date 1', 5.00, []))
-        main.repo.add_activity(ActivityData('16', 12, 'date 1', 5.00, []))
-        main.repo.add_activity(ActivityData('17', 12, 'date 1', 5.00, []))
-        main.repo.add_activity(ActivityData('18', 12, 'date 1', 5.00, []))
-        main.repo.add_activity(ActivityData('19', 12, 'date 1', 5.00, []))
-        main.repo.add_activity(ActivityData('20', 12, 'date 1', 5.00, []))
-        main.repo.add_activity(ActivityData('21', 12, 'date 1', 5.00, []))
-        main.repo.add_activity(ActivityData('22', 12, 'date 1', 5.00, []))
-        main.repo.add_activity(ActivityData('23', 12, 'date 1', 5.00, []))
-        main.repo.add_activity(ActivityData('24', 12, 'date 1', 5.00, []))
-        main.repo.add_activity(ActivityData('25', 12, 'date 1', 5.00, []))
+        for i in range(1, 26):
+            main.repo.add_activity(
+                {'id': str(i), 'completed_streets': 12, 'date': 'date 1', 'distance': 5.00, 'streets': []}
+            )
         response = client.get("/activities")
         assert response.status_code == 200
         result = response.json()
@@ -103,33 +82,10 @@ class TestApi(TestCase):
 
     def test_streets__should_return_specific_pages(self):
         client = TestClient(main.app)
-        main.repo.add_activity(ActivityData('1', 12, 'date 1', 5.00, [
-            {'name':'Street 1', 'city_name':'City 1'},
-            {'name':'Street 2', 'city_name':'City 1'},
-            {'name':'Street 3', 'city_name':'City 1'},
-            {'name':'Street 4', 'city_name':'City 1'},
-            {'name':'Street 5', 'city_name':'City 1'},
-            {'name':'Street 6', 'city_name':'City 1'},
-            {'name':'Street 7', 'city_name':'City 1'},
-            {'name':'Street 8', 'city_name':'City 1'},
-            {'name':'Street 9', 'city_name':'City 1'},
-            {'name':'Street 10', 'city_name':'City 1'},
-            {'name':'Street 11', 'city_name':'City 1'},
-            {'name':'Street 12', 'city_name':'City 1'},
-            {'name':'Street 13', 'city_name':'City 1'},
-            {'name':'Street 14', 'city_name':'City 1'},
-            {'name':'Street 15', 'city_name':'City 1'},
-            {'name':'Street 16', 'city_name':'City 1'},
-            {'name':'Street 17', 'city_name':'City 1'},
-            {'name':'Street 18', 'city_name':'City 1'},
-            {'name':'Street 19', 'city_name':'City 1'},
-            {'name':'Street 20', 'city_name':'City 1'},
-            {'name':'Street 21', 'city_name':'City 1'},
-            {'name':'Street 22', 'city_name':'City 1'},
-            {'name':'Street 23', 'city_name':'City 1'},
-            {'name':'Street 24', 'city_name':'City 1'},
-            {'name':'Street 25', 'city_name':'City 1'},
-        ]))
+        streets = [{'name': f'Street {i}', 'city_name': 'City 1'} for i in range(1,26)]
+        main.repo.add_activity(
+            {'id': '1', 'completed_streets': 12, 'date': 'date 1', 'distance': 5.00, 'streets': streets}
+        )
         response = client.get("/streets")
         assert response.status_code == 200
         result = response.json()
@@ -153,13 +109,13 @@ class TestApi(TestCase):
         client = TestClient(main.app)
         main.repo.add_street_data([{'name': 'Street 1', 'areas': ['Area']}])
         main.repo.add_activity(
-            ActivityData(
-                '1', 
-                12, 
-                'date 1',
-                5.00, 
-                [{'name':'Street 1', 'city_name':'City 1'}, {'name':'Street 2', 'city_name':'City 1'}]
-            )
+            {
+              'id': '1', 
+              'completed_streets': 12, 
+              'date': 'date 1', 
+              'distance': 5.00, 
+              'streets': [{'name':'Street 1', 'city_name':'City 1'}, {'name':'Street 2', 'city_name':'City 1'}]
+            }
         )
         response = client.get("/streets?area=Area")
         assert response.status_code == 200
@@ -173,13 +129,13 @@ class TestApi(TestCase):
         client = TestClient(main.app)
         main.repo.add_area_data([{'area': 'Wrocław', 'street_count': 3}])
         main.repo.add_activity(
-            ActivityData(
-                '1', 
-                12, 
-                'date 1',
-                5.00, 
-                [{'name':'Street 1', 'city_name':'Wrocław'}, {'name':'Street 2', 'city_name':'Wrocław'}]
-            )
+            {
+              'id': '1', 
+              'completed_streets': 12, 
+              'date': 'date 1', 
+              'distance': 5.00, 
+              'streets': [{'name':'Street 1', 'city_name':'Wrocław'}, {'name':'Street 2', 'city_name':'Wrocław'}]
+            }
         )
         response = client.get("/streets/progress")
         assert response.status_code == 200
@@ -192,13 +148,13 @@ class TestApi(TestCase):
         client = TestClient(main.app)
         main.repo.add_area_data([{'area': 'Wrocław', 'street_count': 2}])
         main.repo.add_activity(
-            ActivityData(
-                '1', 
-                12, 
-                'date 1',
-                5.00, 
-                [{'name':'Street 1', 'city_name':'Wrocław'}, {'name':'Street 2', 'city_name':'Wrocław'}]
-            )
+            {
+              'id': '1', 
+              'completed_streets': 12, 
+              'date': 'date 1', 
+              'distance': 5.00, 
+              'streets': [{'name':'Street 1', 'city_name':'Wrocław'}, {'name':'Street 2', 'city_name':'Wrocław'}]
+            }
         )
         response = client.get("/streets/progress")
         assert response.status_code == 200
@@ -212,13 +168,13 @@ class TestApi(TestCase):
         main.repo.add_area_data([{'area': 'Area', 'street_count': 3}])       
         main.repo.add_street_data([{'name': 'Street 1', 'areas': ['Area']}, {'name': 'Street 2', 'areas': ['Area']}])
         main.repo.add_activity(
-            ActivityData(
-                '1', 
-                12, 
-                'date 1',
-                5.00, 
-                [{'name':'Street 1', 'city_name':'City'}, {'name':'Street 2', 'city_name':'City'}]
-            )
+            {
+              'id': '1', 
+              'completed_streets': 12, 
+              'date': 'date 1', 
+              'distance': 5.00, 
+              'streets': [{'name':'Street 1', 'city_name':'City'}, {'name':'Street 2', 'city_name':'City'}]
+            }
         )
         response = client.get("/streets/progress?area=Area")
         assert response.status_code == 200
@@ -232,13 +188,13 @@ class TestApi(TestCase):
         main.repo.add_area_data([{'area': 'Area', 'street_count': 2}])
         main.repo.add_street_data([{'name': 'Street 1', 'areas': ['Area']}, {'name': 'Street 2', 'areas': ['Area']}])
         main.repo.add_activity(
-            ActivityData(
-                '1', 
-                12, 
-                'date 1',
-                5.00, 
-                [{'name':'Street 1', 'city_name':'City'}, {'name':'Street 2', 'city_name':'City'}]
-            )
+            {
+              'id': '1', 
+              'completed_streets': 12, 
+              'date': 'date 1', 
+              'distance': 5.00, 
+              'streets': [{'name':'Street 1', 'city_name':'City'}, {'name':'Street 2', 'city_name':'City'}]
+            }
         )
         response = client.get("/streets/progress?area=Area")
         assert response.status_code == 200
