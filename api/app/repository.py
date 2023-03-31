@@ -1,81 +1,14 @@
 import logging
-from typing import Optional
-from sqlalchemy import create_engine, Column, Integer, String, Float
-from sqlalchemy.orm import declarative_base
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from app.data import ActivityData
 from app.data import Street as ActivityDataStreet
-from typing import List, TypedDict
+from typing import List
+from app.dbmodel import Activity, Street, StreetData, AreaData
+from app.db import Base
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
-
-Base = declarative_base()
-
-class ActivityDict(TypedDict):
-    id: int
-    activity_id: str
-    completed_streets: int
-    date: str
-    distance: float
-
-class Activity(Base): #type: ignore
-    __tablename__ = 'activities'
-    id = Column(Integer, primary_key=True)
-    activity_id = Column(String)
-    completed_streets = Column(Integer)
-    date = Column(String)
-    distance = Column(Float)
-
-    @property
-    def serialize(self) -> ActivityDict:
-        return {
-            'id': int(self.id), 
-            'activity_id': str(self.activity_id),
-            'completed_streets': int(self.completed_streets),
-            'date': str(self.date),
-            'distance': float(self.distance)
-        }
-
-class StreetDict(TypedDict):
-    id: int
-    name: str
-    city_name: str
-    activity_id: int
-    date: str
-    areas: str
-
-class Street(Base): #type: ignore
-    __tablename__ = 'streets'
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
-    city_name = Column(String)
-    activity_id = Column(Integer)
-    date = Column(String)
-    areas = Column(String)
-
-    @property
-    def serialize(self) -> StreetDict:
-        return {
-            'id': int(self.id), 
-            'name': str(self.name),
-            'city_name': str(self.city_name),
-            'activity_id': int(self.activity_id),
-            'date': str(self.date),
-            'areas': str(self.areas)
-        }
-
-class StreetData(Base): #type: ignore
-    __tablename__ = 'street_data'
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
-    areas = Column(String)
-
-class AreaData(Base): #type: ignore
-    __tablename__ = 'area_data'
-    id = Column(Integer, primary_key=True)
-    name = Column(String)
-    streets = Column(Integer)
 
 class StreetRepository():
     def __init__(self, url: str):

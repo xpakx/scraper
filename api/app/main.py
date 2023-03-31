@@ -6,8 +6,9 @@ from app.resolver import PropertyResolver
 from typing import Optional
 from app.populate_db import DataInit
 from typing import List
-from app.repository import ActivityDict, StreetDict
+from app.dbmodel import ActivityDict, StreetDict
 from app.model import ActivityBase, StreetBase, ProgressBase, ProgressDict
+
 
 origins = [
     "http://localhost",
@@ -47,7 +48,7 @@ async def streets(page: Optional[int] = None, area: Optional[str] = None) -> Lis
 
     return [i.serialize for i in result]
 
-@app.get("/streets/progress", response_model=List[ProgressBase])
+@app.get("/streets/progress", response_model=ProgressBase)
 async def progress(area: Optional[str] = None) -> ProgressDict:
     total = repo.get_total_streets(area if area else 'Wrocław')
     completed = repo.count_streets_by_area(area) if area else repo.count_streets_by_city('Wrocław')
