@@ -208,3 +208,26 @@ class TestApi(TestCase):
         assert result['total'] == 2
         assert result['completed'] == 2   
         assert result['city_completed'] == True  
+
+
+    def test_map__should_return_progress(self) -> None:
+        client = TestClient(main.app)
+        main.repo.add_area_data([{'area': 'Area', 'street_count': 3}])   
+        main.repo.add_area_data([{'area': 'Area 2', 'street_count': 2}])   
+        main.repo.add_street_data([{'name': 'Street 1', 'areas': ['Area']}, {'name': 'Street 2', 'areas': ['Area']}, {'name': 'Street 3', 'areas': ['Area 2']}])
+        main.repo.add_activity(
+            {
+              'id': '1', 
+              'completed_streets': 12, 
+              'date': 'date 1', 
+              'distance': 5.00, 
+              'streets': [{'name':'Street 1', 'city_name':'City'}, {'name':'Street 2', 'city_name':'City'}]
+            }
+        )
+        response = client.get("/map")
+        assert response.status_code == 200
+        result = response.json()
+        assert result[0]['name'] == 'Area'
+        assert result[0]['total'] == 3
+        assert result[0]['completed'] == 2   
+        assert result[0]['area_completed'] == False  
