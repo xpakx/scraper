@@ -1,0 +1,18 @@
+
+path {
+    fill: #97d455;
+    fill-opacity: 1;
+    position: relative;
+    stroke: #cbb93d;
+    stroke-opacity: 1;
+    stroke-width: 2;
+    stroke-linecap: butt;
+    stroke-linejoin: miter;
+    stroke-miterlimit: 4;
+    stroke-dasharray: none;
+    fill-rule: evenodd;
+}
+  
+path:hover {
+    fill: #f7b15d;
+}

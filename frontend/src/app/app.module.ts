@@ -7,13 +7,15 @@ import { AppComponent } from './app.component';
 import { ActivitiesComponent } from './activities/activities.component';
 import { StreetsComponent } from './streets/streets.component';
 import { ProgressBarComponent } from './utils/progress-bar/progress-bar.component';
+import { MapComponent } from './map/map.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     ActivitiesComponent,
     StreetsComponent,
-    ProgressBarComponent
+    ProgressBarComponent,
+    MapComponent
   ],
   imports: [
     BrowserModule,

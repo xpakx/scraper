@@ -1,5 +1,5 @@
 import logging
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, func
 from sqlalchemy.orm import sessionmaker
 from app.data import ActivityData
 from app.data import Street as ActivityDataStreet
@@ -90,3 +90,12 @@ class StreetRepository():
     def count_streets_by_area(self, area: str) -> int:
         session = self.Session()
         return session.query(Street).filter(Street.areas.like(f'%;{area};%')).count()
+    
+    def get_map_data(self) -> List:
+        session = self.Session()
+        return session.query(AreaData.name, AreaData.streets, func.count(Street.id)).\
+            select_from(AreaData).\
+            join(Street, Street.areas.like('%' + AreaData.name + '%')).\
+            group_by(AreaData.id).\
+            having(AreaData.name.not_like("Wrocław")).\
+            all()

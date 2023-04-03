@@ -6,6 +6,12 @@ from fastapi.testclient import TestClient
 from unittest import TestCase
 import app.main as main
 from app.data import ActivityData
+import logging
+
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
 
 class TestApi(TestCase):
     def setUp(self) -> None:

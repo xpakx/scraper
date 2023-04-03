@@ -7,7 +7,7 @@ from typing import Optional
 from app.populate_db import DataInit
 from typing import List
 from app.dbmodel import ActivityDict, StreetDict
-from app.model import ActivityBase, StreetBase, ProgressBase, ProgressDict
+from app.model import ActivityBase, StreetBase, ProgressBase, ProgressDict, MapProgressBase
 
 
 origins = [
@@ -54,6 +54,19 @@ async def progress(area: Optional[str] = None) -> ProgressDict:
     completed = repo.count_streets_by_area(area) if area else repo.count_streets_by_city('Wrocław')
     progress = completed/total if total > 0 else 0.
     return { 'total': total, 'completed': completed, 'progress':  "{0:.2%}".format(progress), 'city_completed': completed >= total }
+
+@app.get("/map", response_model=List[MapProgressBase])
+async def map_data() -> List[dict]:
+    data = repo.get_map_data()
+    result: List = []
+    for d in data:
+        name = d[0]
+        total = d[1]
+        completed = d[2]
+        progress = completed/total if total > 0 else 0.
+        result.append( { 'name': name, 'total': total, 'completed': completed, 'progress':  "{0:.2%}".format(progress), 'area_completed': completed >= total })
+    return result
+
 
 @app.on_event("shutdown")
 async def shutdown_event() -> None:

@@ -27,3 +27,10 @@ class ProgressBase(BaseModel):
     completed: int
     progress:  str
     city_completed: bool
+
+class MapProgressBase(BaseModel):
+    name: str
+    total: int
+    completed: int
+    progress:  str
+    area_completed: bool
