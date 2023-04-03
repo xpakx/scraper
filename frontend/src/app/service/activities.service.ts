@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Activity } from '../dto/activity';
+import { MapProgress } from '../dto/map-progress';
 import { Progress } from '../dto/progress';
 import { Street } from '../dto/street';
 
@@ -27,5 +28,9 @@ export class ActivitiesService {
 
   public getProgress(): Observable<Progress> {
     return this.http.get<Progress>(`${this.apiServerUrl}/streets/progress`);
+  }
+
+  public getProgressForMap(): Observable<MapProgress[]> {
+    return this.http.get<MapProgress[]>(`${this.apiServerUrl}/map`);
   }
 }

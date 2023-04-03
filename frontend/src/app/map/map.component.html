@@ -1,16 +1,22 @@
 <div class="container">
-    <svg width="1920" height="574" style="overflow: visible;">
-        <defs></defs>
-        <g transform="translate(0,200)">
-            <path *ngFor="let area of areas" 
-                [id]="area.id" 
-                [attr.d]="area.d" 
-                (mouseenter)="show(area.name)" 
-                (mouseleave)="show(undefined)">
-            </path>
-        </g>
-    </svg>
+    <div class="map">
+        <svg width="1920" height="574" style="overflow: visible;">
+            <defs></defs>
+            <g transform="translate(0,200)">
+                <path *ngFor="let area of areas" 
+                    [attr.d]="area.d" 
+                    [style]="'fill-opacity: '+area.progress+';'"
+                    (mouseenter)="show(area.name)" 
+                    (mouseleave)="show(undefined)">
+                </path>
+            </g>
+        </svg>
+    </div>
+    
+    <div id='tooltip' *ngIf="active"> 
+        {{ active }}
+        <app-progress-bar *ngIf="progress" [completed]="progress.completed" [total]="progress.total" [finished]="progress.area_completed" [percentage]="progress.progress"></app-progress-bar>
+    </div>
+
 </div>
 
-    
-<div id='tooltip' *ngIf="active"> {{ active }}</div>
